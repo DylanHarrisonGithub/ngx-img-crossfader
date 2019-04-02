@@ -1,0 +1,6 @@
+.demo {
+  position: relative;
+  float: left;
+  margin: 20px;
+  box-shadow: 10px 10px 5px #aaaaaa;
+}

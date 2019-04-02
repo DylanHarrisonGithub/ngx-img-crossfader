@@ -1,1 +1,27 @@
 /* You can add global styles to this file, and also import other style files */
+ngx-img-crossfader {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  margin: 0;
+  z-index: inherit;
+}
+
+.ngx-img-crossfader-div {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  margin: 0;
+  z-index: inherit;
+}
+
+.ngx-img-crossfader-canvas {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  margin: 0;
+  z-index: inherit;
+}

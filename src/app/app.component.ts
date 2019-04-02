@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { NgxImgCrossfaderComponent } from 'ngx-img-crossfader'
+
 
 @Component({
   selector: 'app-root',
@@ -6,5 +8,12 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'img-crossfader';
+  title = 'ngx-img-crossfader';
+  myImages: Array<HTMLImageElement> = [
+    NgxImgCrossfaderComponent.imgFromSource('../assets/images/coding/0.jpg'),
+    NgxImgCrossfaderComponent.imgFromSource('../assets/images/coding/1.jpg'),
+    NgxImgCrossfaderComponent.imgFromSource('../assets/images/coding/2.jpg'),
+    NgxImgCrossfaderComponent.imgFromSource('../assets/images/coding/3.jpg'),
+    NgxImgCrossfaderComponent.imgFromSource('../assets/images/coding/4.jpg'),
+  ];
 }
