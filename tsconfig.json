@@ -17,6 +17,14 @@
     "lib": [
       "es2018",
       "dom"
-    ]
+    ],
+    "paths": {
+      "ngx-img-crossfader": [
+        "dist/ngx-img-crossfader"
+      ],
+      "ngx-img-crossfader/*": [
+        "dist/ngx-img-crossfader/*"
+      ]
+    }
   }
 }
