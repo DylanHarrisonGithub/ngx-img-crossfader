@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { NgxImgCrossfaderComponent } from 'ngx-img-crossfader'
 
-
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',

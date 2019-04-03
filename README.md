@@ -1,27 +1,68 @@
-# ImgCrossfader
+# ngx-img-crossfader
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 7.3.0.
+![alt text](screenshots/crossfader.gif "crossfader")
 
-## Development server
+## About
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+Angular image crossfader component.
 
-## Code scaffolding
+## Features
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+- Image fit with conserved aspect ratio.
+- Inherit z-index from parent element.
+- Configure background color, idle time, transition time, transition fps, etc. 
 
-## Build
+## Instructions
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+#### Installation
+```
+npm install ngx-img-crossfader --save
+```
+#### Setup
+1. add ngx-img-crossfader.css into project angular.json
+```JSON
+"styles": [
+  "styles.css",
+  "node_modules/ngx-img-crossfader/ngx-img-crossfader.css"
+]
+```
+2. Import NgxImgCrossfaderModule into app.module.ts and add to imports.
+```TypeScript
+import { BrowserModule } from '@angular/platform-browser';
+import { NgModule } from '@angular/core';
 
-## Running unit tests
+import { AppComponent } from './app.component';
+import { NgxImgCrossfaderModule } from 'ngx-img-crossfader';
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+@NgModule({
+  declarations: [
+    AppComponent,
+    DemoComponent
+  ],
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    NgxImgCrossfaderModule
+  ],
+  providers: [],
+  bootstrap: [AppComponent]
+})
+export class AppModule { }
+```
+3. Import NgxImgCrossfaderComponent in desired components.ts and template
+```TypeScript
+...
+import { NgxImgCrossfaderComponent } from 'ngx-img-crossfader';
+...
+```
+```Html
+...
+<ngx-img-crossfader [images]="myImages"></ngx-img-crossfader>
+...
+```
+#### Inputs
+- idleTimeMS: Time between transitions in MS, Default: 5000
+- transitionTimeMS: Transition time in MS. Default: 1000
+- transitionFPS: Transition frames per sec. Default: 26
+- images: Array of HTMLImageElements to crossfade
+- backgroundColor: Background color. Default: 'rgba(0,0,0,1.0)';
