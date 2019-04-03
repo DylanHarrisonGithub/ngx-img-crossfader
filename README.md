@@ -2,6 +2,8 @@
 
 ![alt text](screenshots/crossfader.gif "crossfader")
 
+[https://www.npmjs.com/package/ngx-img-crossfader](https://www.npmjs.com/package/ngx-img-crossfader)
+
 ## About
 
 Angular image crossfader component.
