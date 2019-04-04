@@ -26,12 +26,15 @@ export class AppComponent {
       if (this.index < this.myImages.length) {
         this.myImageSources.push(this.myImages[this.index]);
         this.index++;
-      } else {
-        if (this.index2 > -1) {
-          this.index2--;
-          this.myImageSources.pop()
-        }
       }
-    }, 10000);
+    }, 1000);
+  }
+
+  next() {
+    this.myCrossfader.stepForward();
+  }
+
+  back() {
+    this.myCrossfader.stepBackward();
   }
 }

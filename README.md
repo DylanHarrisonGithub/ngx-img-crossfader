@@ -1,6 +1,6 @@
 # ngx-img-crossfader
 
-![alt text](screenshots/crossfader.gif "crossfader")
+![Failed to load crossfader preview gif](https://raw.githubusercontent.com/DylanHarrisonGithub/ngx-img-crossfader/master/screenshots/crossfader.gif "crossfader")
 
 [https://www.npmjs.com/package/ngx-img-crossfader](https://www.npmjs.com/package/ngx-img-crossfader)
 
@@ -12,8 +12,9 @@ Simple to use Angular image crossfader component.
 
 - Image fit with preserved aspect ratio.
 - Inherit z-index from parent element.
-- Configure background color, idle time, transition time, transition fps, etc.
+- Configure background color, idle time, transition time, etc.
 - Able to add images dynamically.
+- Auto-advance or advance and step back manually.
 
 ## Instructions
 
@@ -53,27 +54,38 @@ export class AppModule { }
 ```
 3. Import NgxImgCrossfaderComponent in desired components and template
 ```TypeScript
-...
-import { NgxImgCrossfaderComponent } from 'ngx-img-crossfader';
-...
-myImageSources = [
-  './my/image/location/image.jpg',
-  'www.my/image/url.com/anotherImage.png'
-];
-...
+import { Component, ViewChild } from '@angular/core';
+import { NgxImgCrossfaderComponent } from 'ngx-img-crossfader'
+
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css']
+})
+export class AppComponent {  
+  myImageSources = [
+    './my/image/location/image.jpg',
+    'www.my/image/url.com/anotherImage.png'
+  ];
+
+  @ViewChild('myCrossfader') myCrossfader: NgxImgCrossfaderComponent;
+
+  constructor() { }
+  
+  next() { myCrossfader.stepForaward() }
+  back() { myCrossfader.stepBackward() }
+}
 ```
 ```Html
 ...
 <ngx-img-crossfader [imageSources]="myImageSources" #myCrossfader></ngx-img-crossfader>
-...
-<ul>
-  <li *ngFor="let msg of myCrossfader.log">{{ msg }}></li>
-</ul>
+<button (click)="back()">Back</button>
+<button (click)="next()">Next</button>
 ...
 ```
 #### Inputs
 - idleTimeMS: Time between transitions in MS, Default: 5000.
 - transitionTimeMS: Transition time in MS. Default: 1000.
-- transitionFPS: Transition frames per sec. Default: 26.
 - imageSources: Array\<string> of image sources to crossfade. Default: [].
 - backgroundColor: Background color. Default: 'rgba(0,0,0,1.0)'.
+- autoAdvance: boolean. step forward automatically. Default: true.
