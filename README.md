@@ -6,13 +6,14 @@
 
 ## About
 
-Angular image crossfader component.
+Simple to use Angular image crossfader component.
 
 ## Features
 
-- Image fit with conserved aspect ratio.
+- Image fit with preserved aspect ratio.
 - Inherit z-index from parent element.
-- Configure background color, idle time, transition time, transition fps, etc. 
+- Configure background color, idle time, transition time, transition fps, etc.
+- Able to add images dynamically.
 
 ## Instructions
 
@@ -38,8 +39,7 @@ import { NgxImgCrossfaderModule } from 'ngx-img-crossfader';
 
 @NgModule({
   declarations: [
-    AppComponent,
-    DemoComponent
+    AppComponent
   ],
   imports: [
     BrowserModule,
@@ -51,20 +51,29 @@ import { NgxImgCrossfaderModule } from 'ngx-img-crossfader';
 })
 export class AppModule { }
 ```
-3. Import NgxImgCrossfaderComponent in desired components.ts and template
+3. Import NgxImgCrossfaderComponent in desired components and template
 ```TypeScript
 ...
 import { NgxImgCrossfaderComponent } from 'ngx-img-crossfader';
 ...
+myImageSources = [
+  './my/image/location/image.jpg',
+  'www.my/image/url.com/anotherImage.png'
+];
+...
 ```
 ```Html
 ...
-<ngx-img-crossfader [images]="myImages"></ngx-img-crossfader>
+<ngx-img-crossfader [imageSources]="myImageSources" #myCrossfader></ngx-img-crossfader>
+...
+<ul>
+  <li *ngFor="let msg of myCrossfader.log">{{ msg }}></li>
+</ul>
 ...
 ```
 #### Inputs
-- idleTimeMS: Time between transitions in MS, Default: 5000
-- transitionTimeMS: Transition time in MS. Default: 1000
-- transitionFPS: Transition frames per sec. Default: 26
-- images: Array of HTMLImageElements to crossfade
-- backgroundColor: Background color. Default: 'rgba(0,0,0,1.0)';
+- idleTimeMS: Time between transitions in MS, Default: 5000.
+- transitionTimeMS: Transition time in MS. Default: 1000.
+- transitionFPS: Transition frames per sec. Default: 26.
+- imageSources: Array\<string> of image sources to crossfade. Default: [].
+- backgroundColor: Background color. Default: 'rgba(0,0,0,1.0)'.

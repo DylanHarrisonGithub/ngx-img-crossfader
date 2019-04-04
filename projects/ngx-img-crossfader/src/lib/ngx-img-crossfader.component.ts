@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ViewChild } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, IterableDiffers, DoCheck, IterableDiffer, IterableChangeRecord } from '@angular/core';
 
 @Component({
   selector: 'ngx-img-crossfader',
@@ -9,30 +9,51 @@ import { Component, OnInit, Input, ViewChild } from '@angular/core';
   `,
   styles: []
 })
-export class NgxImgCrossfaderComponent implements OnInit {
+export class NgxImgCrossfaderComponent implements OnInit, DoCheck {
 
   @Input() initDelayMS = 0;
   @Input() idleTimeMS = 5000;
   @Input() transitionTimeMS = 1000;
   @Input() transitionFPS = 26;
-  @Input() images:Array<HTMLImageElement> = [];
+  @Input() imageSources: Array<string> = [];
   @Input() backgroundColor = 'rgba(0,0,0,1.0)';
-  @Input() mode = 'fit'; //stretch, tile
+  @Input() mode = 'fit'; // todo: stretch, tile
   
+  public log: Array<string> = [];
+
+  private images:Array<HTMLImageElement> = [];
+  private transitionStartTime: number;
+  private foregroundImgNum: number = 0;
+  private backgroundImgNum: number = 0;
+  private isTransitioning: boolean = false;
+
+  private _differ: IterableDiffer<string>;
+
   @ViewChild('div') private div;
   @ViewChild('canvas') private canvas;
 
-  private transitionStartTime: number;
-  private foregroundImgNum: number = 0;
-  private backgroundImgNum: number = 1;
-  private isTransitioning: boolean = false;
-
-  constructor() { }
+  constructor(private _iterableDiffer: IterableDiffers) {
+    this._differ = this._iterableDiffer.find(this.imageSources).create();
+    this.imageSources.forEach((source: string) => {
+      this.appendImgFromSource(source);
+    });
+  }
 
   ngOnInit() {
     setTimeout(() => {
       this.idle();
-    }, this.initDelayMS)
+    }, this.initDelayMS);
+  }
+
+  ngDoCheck() {
+    let changes = this._differ.diff(this.imageSources);
+    if (changes) {
+      changes.forEachAddedItem((record: IterableChangeRecord<any>) => {
+        this.log.push('Detected addition to imageSources ' + record.item);
+        this.appendImgFromSource(record.item);
+      });
+      // todo: detect removal of items
+    }
   }
 
   private idle(): void {
@@ -51,8 +72,13 @@ export class NgxImgCrossfaderComponent implements OnInit {
         this.transition();
       } else {
         this.isTransitioning = false;
-        this.foregroundImgNum = this.backgroundImgNum;
-        this.backgroundImgNum = (this.backgroundImgNum + 1) % this.images.length;
+        if (this.images.length) {
+          this.foregroundImgNum = this.backgroundImgNum;
+          this.backgroundImgNum = (this.backgroundImgNum + 1) % this.images.length;   // 1 % 0 = NaN       
+        } else {
+          this.foregroundImgNum = 0;
+          this.backgroundImgNum = 0;
+        }
         this.idle();
       }
     },
@@ -70,15 +96,15 @@ export class NgxImgCrossfaderComponent implements OnInit {
     this.paint();
   }
 
-  private paint(): void {
+  public paint(): void {
 
     let ctx = this.canvas.nativeElement.getContext('2d');
     ctx.clearRect(0,0,this.canvas.nativeElement.width, this.canvas.nativeElement.height);
-    // fill background
+
     ctx.fillStyle = this.backgroundColor;
     ctx.fillRect(0,0,this.canvas.nativeElement.width, this.canvas.nativeElement.height);
     
-    if (this.images.length > 1) {
+    if (this.images[this.foregroundImgNum] && this.images[this.backgroundImgNum] && this.images.length > 1) {
       if (this.isTransitioning) {
         ctx.save();
   
@@ -92,7 +118,6 @@ export class NgxImgCrossfaderComponent implements OnInit {
   
         ctx.restore();
       } else {
-        console.log('we out here');
         let imgLayout = this.computeImgLayout(this.images[this.foregroundImgNum]);
         ctx.drawImage(this.images[this.foregroundImgNum], imgLayout.x, imgLayout.y, imgLayout.width, imgLayout.height);
       }
@@ -128,10 +153,22 @@ export class NgxImgCrossfaderComponent implements OnInit {
     return (1 - Math.cos( (Math.PI*dt)/this.transitionTimeMS )) / 2;
   }
 
-  public static imgFromSource(source: string): HTMLImageElement {
+  private appendImgFromSource(source: string): void {
     let img = new Image();
+    img.onerror = (error) => {
+      this.log.push('Failed to load ' + source);
+    }
+    img.onload = (event) => {
+      if (<HTMLImageElement>event.target) {
+        this.images.push(<HTMLImageElement>event.target);
+        this.log.push('Success loading ' + source);
+        if (this.images.length == 1) {
+          this.log.push('First Image loaded');
+          this.paint();
+        }
+      }
+    }
     img.src = source;
-    return img;
   }
 
 }

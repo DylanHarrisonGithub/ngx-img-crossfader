@@ -5,12 +5,10 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 
 import { NgxImgCrossfaderModule } from 'ngx-img-crossfader';
-import { DemoComponent } from './components/demo/demo.component';
 
 @NgModule({
   declarations: [
-    AppComponent,
-    DemoComponent
+    AppComponent
   ],
   imports: [
     BrowserModule,
